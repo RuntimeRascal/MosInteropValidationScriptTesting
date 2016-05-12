@@ -16,9 +16,6 @@ Namespace ViewModel
 
         
 #Region "Contructor"
-        ''' <summary>
-        '''     Initializes a new instance of the <see cref="ValidationCodeRunnerViewModel" /> class.
-        ''' </summary>
         Public Sub New()
            ' ValidateQuestionCommand = New RelayCommand(ValidateQuestion())
 
@@ -65,11 +62,6 @@ Namespace ViewModel
 #End Region
 
 #Region "Properties"
-
-        ''' <summary>
-        '''     Gets or sets my office application.
-        ''' </summary>
-        ''' <value>My office application.</value>
         Public Overridable Property MyOfficeApp() As Microsoft.Office.Interop.Access.Application
             Get
                 Return _myOfficeApp
@@ -82,61 +74,41 @@ Namespace ViewModel
 #End Region
 
 #Region "Methods"
-        ''' <summary>
-        '''     Setups this instance.
-        ''' </summary>
         Public Sub Setup()
             MyOfficeApp = New Microsoft.Office.Interop.Access.Application()
 
             If MyOfficeApp IsNot Nothing Then
                 Console.WriteLine("Version: " + MyOfficeApp.Version)
                 Console.WriteLine("Name: " + MyOfficeApp.Name)
-                'MyOfficeApp.DoCmd.RunCommand( AcCommand.acCmdSetCaption)
 
-
-                MyOfficeApp.Screen.ActiveForm.Caption = "sd"
-
-
-                ' Console.WriteLine("Caption: " + MyOfficeApp.Caption)
-
-                '		if (System.Windows.Forms.MessageBox.Show("Open Inbox?", "Do Something?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                '		{
-                '			"Hit Done in MBox buddy!".Dump();		
-                '		}
-
-                '		If MyOfficeApp.ActiveWindow IsNot Nothing Then
-                '			Console.WriteLine("HWND = " & MyOfficeApp.ActiveWindow.Hwnd.ToString())
-                '		End If
-
-                'MyOfficeApp.GetType()
-                'Dim hwnd = MyOfficeApp.GetType().InvokeMember("Hwnd", BindingFlags.GetProperty, Nothing, MyOfficeApp, Nothing)
-                'Console.WriteLine("HWND = " & hwnd.ToString())
                 MyOfficeApp.Visible = True
-                'MyOfficeApp.Application.
-                Try
-                    Dim HwndInt = MyOfficeApp.hWndAccessApp()
-                    Console.WriteLine("HWND = " & HwndInt)
-                Catch Ex As COMException
-                End Try
+
+                NativeMethods.SetWindowText(MyOfficeApp.hWndAccessApp(), "Did it work")
+
+'                Try
+'                    Dim HwndInt = MyOfficeApp.hWndAccessApp()
+'                    Console.WriteLine("HWND = " & HwndInt)
+'                Catch Ex As COMException
+'                End Try
 
             End If
             Console.WriteLine("")
         End Sub
 
-        ''' <summary>
-        '''     Runs the validation pre code.
-        ''' </summary>
         Public Sub RunValidationPreCode()
             Console.WriteLine(vbCrLf & "Executing the pre Code. . .")
 
             If MyOfficeApp IsNot Nothing Then
+                NativeMethods.SetWindowText(MyOfficeApp.hWndAccessApp(), "Did it work")
 
+                MyOfficeApp.RefreshTitleBar()
             End If
         End Sub
 
-        ''' <summary>
-        '''     Runs the validation post code.
-        ''' </summary>
+        Function GetAccessApplicationHwnd() As IntPtr
+            Return New IntPtr( MyOfficeApp.hWndAccessApp() )
+        End Function
+
         Public Sub RunValidationPostCode()
             Console.WriteLine(vbCrLf & "Executing the post Code. . .")
 
@@ -145,9 +117,6 @@ Namespace ViewModel
             End If
         End Sub
 
-        ''' <summary>
-        '''     Ends this instance.
-        ''' </summary>
         Public Sub [End]()
             Console.WriteLine(vbCrLf & "Executing the termination Code. . .")
 
@@ -158,9 +127,6 @@ Namespace ViewModel
             End If
         End Sub
 
-        ''' <summary>
-        '''     Prompts to fill array.
-        ''' </summary>
         Sub PromptToFillArray()
             _localParameters = New Object() {True, ' Compiler result (Pre-Code or Post-Code) True or False
                                              New List(Of String), ' Sample files array
@@ -223,9 +189,6 @@ Namespace ViewModel
             PrintParams()
         End Sub
 
-        ''' <summary>
-        '''     Prints the parameters.
-        ''' </summary>
         Sub PrintParams()
             Console.WriteLine(vbCrLf & vbCrLf & "Parameter Array looks like this:")
             For index = 0 To _localParameters.Length - 1
@@ -252,9 +215,6 @@ Namespace ViewModel
             Console.WriteLine("")
         End Sub
 
-        ''' <summary>
-        '''     Closes the dialogs.
-        ''' </summary>
         Public Overridable Sub CloseDialogs()
 			Try
 				Dim sessionId As Integer = Process.GetCurrentProcess.SessionId
@@ -274,9 +234,6 @@ Namespace ViewModel
 			End Try
         End Sub
 
-        ''' <summary>
-        '''     Maximizes the application.
-        ''' </summary>
         Public Overridable Sub MaximizeApp()
             Try
                 MyOfficeApp.Visible = True
@@ -286,9 +243,6 @@ Namespace ViewModel
             End Try
         End Sub
 
-        ''' <summary>
-        '''     Minimizes the application.
-        ''' </summary>
         Public Overridable Sub MinimizeApp()
             Try
                 MyOfficeApp.RunCommand(AcCommand.acCmdAppMinimize)
@@ -296,9 +250,6 @@ Namespace ViewModel
             End Try
         End Sub
 
-        ''' <summary>
-        '''     Closes the application.
-        ''' </summary>
         Overridable Sub CloseApp()
             Try
                 If MyOfficeApp IsNot Nothing Then
@@ -320,9 +271,6 @@ Namespace ViewModel
             End Try
         End Sub
 
-        ''' <summary>
-        '''     Finals the close application.
-        ''' </summary>
         Overridable Sub FinalCloseApp()
             			Try
 				If MyOfficeApp IsNot Nothing Then
@@ -360,11 +308,6 @@ Namespace ViewModel
 #End Region
 
 #Region "Functions"
-        ''' <summary>
-        '''     Validates the question.
-        ''' </summary>
-        ''' <param name="parameters">The parameters.</param>
-        ''' <returns>Object.</returns>
         'Public Overridable Function ValidateQuestion(Optional ByVal ParamArray parameters As Object()) As [Object]
         Public Overridable Function ValidateQuestion() As [Object]
 '            If parameters Is Nothing Then
@@ -406,83 +349,42 @@ Namespace ViewModel
 #End Region
 
 #Region "Commands"
-        ''' <summary>
-        '''     Gets or sets the setup command.
-        ''' </summary>
-        ''' <value>The setup command.</value>
         Property SetupCommand() As ICommand
 
-        ''' <summary>
-        '''     Gets or sets the run validation pre code command.
-        ''' </summary>
-        ''' <value>The run validation pre code command.</value>
         Property RunValidationPreCodeCommand() As ICommand
 
-        ''' <summary>
-        '''     Gets or sets the run validation post code command.
-        ''' </summary>
-        ''' <value>The run validation post code command.</value>
         Property RunValidationPostCodeCommand() As ICommand
 
-        ''' <summary>
-        '''     Gets or sets the end command.
-        ''' </summary>
-        ''' <value>The end command.</value>
         Property EndCommand() As ICommand
 
-        ''' <summary>
-        '''     Gets or sets the prompt to fill array command.
-        ''' </summary>
-        ''' <value>The prompt to fill array command.</value>
         Property PromptToFillArrayCommand() As ICommand
 
-        ''' <summary>
-        '''     Gets or sets the print parameters command.
-        ''' </summary>
-        ''' <value>The print parameters command.</value>
         Property PrintParamsCommand() As ICommand
 
-        ''' <summary>
-        '''     Gets or sets the close dialogs command.
-        ''' </summary>
-        ''' <value>The close dialogs command.</value>
         Property CloseDialogsCommand() As ICommand
 
-        ''' <summary>
-        '''     Gets or sets the maximize application command.
-        ''' </summary>
-        ''' <value>The maximize application command.</value>
         Property MaximizeAppCommand() As ICommand
 
-        ''' <summary>
-        '''     Gets or sets the minimize application command.
-        ''' </summary>
-        ''' <value>The minimize application command.</value>
         Property MinimizeAppCommand() As ICommand
 
-        ''' <summary>
-        '''     Gets or sets the close application command.
-        ''' </summary>
-        ''' <value>The close application command.</value>
         Property CloseAppCommand() As ICommand
 
-        ''' <summary>
-        '''     Gets or sets the final close application command.
-        ''' </summary>
-        ''' <value>The final close application command.</value>
         Property FinalCloseAppCommand() As ICommand
 
-        ''' <summary>
-        '''     Gets or sets the validate question command.
-        ''' </summary>
-        ''' <value>The validate question command.</value>
         Property ValidateQuestionCommand() As ICommand
 
-        ''' <summary>
-        '''     Gets or sets the garbage collector command.
-        ''' </summary>
-        ''' <value>The garbage collector command.</value>
         Property GarbageCollectorCommand() As ICommand
 #End Region
+    End Class
+
+
+
+
+    Friend NotInheritable Class NativeMethods  
+        <DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Auto)> _
+        Friend  Shared Function SetWindowText(ByVal hwnd As IntPtr, ByVal lpString As String) As Boolean
+        End Function
+
+
     End Class
 End Namespace

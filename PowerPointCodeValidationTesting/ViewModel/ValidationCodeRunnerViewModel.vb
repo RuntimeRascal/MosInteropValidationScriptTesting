@@ -19,7 +19,7 @@ Namespace ViewModel
                 '''     Initializes a new instance of the <see cref="ValidationCodeRunnerViewModel" /> class.
                 ''' </summary>
                 Public Sub New()
-                    ValidateQuestionCommand = New RelayCommand(ValidateQuestion())
+                   ValidateQuestionCommand = New RelayCommand(AddressOf ValidateQuestion)
 
                     PromptToFillArrayCommand = New RelayCommand(AddressOf PromptToFillArray)
                     PrintParamsCommand = New RelayCommand(AddressOf PrintParams)
@@ -301,31 +301,7 @@ Namespace ViewModel
                     ' --------------------------  Place the validation code here  -----------------------------------
                     ' -----------------------------------------------------------------------------------------------
                     ' NOTE: Remove the Me in front of Me.MyOfficeApp
-
-                    Dim IsValidate = CType(parameters(0).ToString(), Boolean)
-
-                    Dim Templates = CType(parameters(1), List(Of String))
-                    Dim KeyWords = CType(parameters(2), List(Of String))
-                    Dim BlueWords = CType(parameters(3), List(Of String))
-
-                    If Not IsValidate Then ' Start Pre-Code
-                        Try
-
-                            Return True
-                        Catch Ex As Exception
-                            Return False
-                        End Try
-                    Else ' Start Validation-Code    
-
-                        Dim Points(0)
-                        Points(0) = False
-                        Try
-
-                        Catch Ex As Exception
-                            Return Points
-                        End Try
-                        Return Points
-                    End If
+                Return new Object()
                 End Function
         #End Region
 
